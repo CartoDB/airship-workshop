@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Toolbar</title>
+
+    <!-- Include CARTO VL & Mapbox GL -->
+    <script src="https://libs.cartocdn.com/carto-vl/v1.2/carto-vl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js"></script>
+
+    <!-- Airship CSS -->
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-style/v2/airship.css">
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-icons/v2/icons.css">
+
+    <!-- Airship Components -->
+    <script src="https://libs.cartocdn.com/airship-components/v2/airship.js"></script>
+
+    <!-- Airship Bridge -->
+    <script src="https://libs.cartocdn.com/airship-bridge/v2/asbridge.min.js"></script>
+</head>
+
+<body class="as-app-body">
+  <div class="as-app">
+    <header class="as-toolbar">
+      <button class="as-toolbar__item as-toolbar__toggle">
+        <i class="as-icon as-icon-hamburger as-title as-m--0"></i>
+      </button>
+      <div class="as-toolbar__item">
+        <img src="https://carto.com/developers/airship/reference/imported_content/examples/layouts/common/logo-circle.svg">
+      </div>
+      <nav class="as-toolbar__actions">
+        <ul>
+          <li>
+            <div class="as-toolbar__item">
+              <a href="https://www.carto.com">Link</a>
+            </div>
+          </li>
+          <li>
+            <div class="as-toolbar__item">
+              <a href="https://www.carto.com">Link 2</a>
+            </div>
+          </li>
+          <li>
+            <div class="as-toolbar__item">
+              <a href="https://www.carto.com">Link 3</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="as-content">
+      <main class="as-main">
+          <div class="as-map-area">
+              <div id="map"></div>
+          </div>
+      </main>
+    </div>
+  </div>
+  <script src="../scripts/map.js"></script>
+  <script>
+    const toolbarActions = document.querySelector('.as-toolbar__actions');
+    document.querySelector('.as-toolbar__toggle').addEventListener('click', () => {
+      toolbarActions.classList.toggle('as-toolbar__actions--visible');
+    });
+  </script>
+  <script>
+    createMap();
+  </script>
+</body>
+
+</html>

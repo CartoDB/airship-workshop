@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Toolbar</title>
+
+    <!-- Include CARTO VL & Mapbox GL -->
+    <script src="https://libs.cartocdn.com/carto-vl/v1.2/carto-vl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js"></script>
+
+    <!-- Airship CSS -->
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-style/v2/airship.css">
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-icons/v2/icons.css">
+
+    <!-- Airship Components -->
+    <script src="https://libs.cartocdn.com/airship-components/v2/airship.js"></script>
+
+    <!-- Airship Bridge -->
+    <script src="https://libs.cartocdn.com/airship-bridge/v2/asbridge.min.js"></script>
+</head>
+
+<body class="as-app-body">
+  <div class="as-app">
+    <header class="as-toolbar">
+      <div class="as-toolbar__item">
+        <img src="https://carto.com/developers/airship/reference/imported_content/examples/layouts/common/logo-circle.svg">
+      </div>
+      <div class="as-toolbar__item">
+        <a href="https://www.carto.com">Homepage</a>
+      </div>
+      <div class="as-toolbar__group">
+        <div class="as-toolbar__item">
+          <a href="https://www.carto.com">Link 1</a>
+        </div>
+        <div class="as-toolbar__item">
+          <a href="https://www.carto.com">Link 2</a>
+        </div>
+      </div>
+    </header>
+    <div class="as-content">
+      <main class="as-main">
+          <div class="as-map-area">
+              <div id="map"></div>
+          </div>
+      </main>
+    </div>
+  </div>
+  <script src="../scripts/map.js"></script>
+  <script>
+    createMap();
+  </script>
+</body>
+
+</html>

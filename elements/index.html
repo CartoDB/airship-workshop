@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>UI Elements</title>
+
+    <!-- Include CARTO VL & Mapbox GL -->
+    <script src="https://libs.cartocdn.com/carto-vl/v1.2/carto-vl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js"></script>
+
+    <!-- Airship CSS -->
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-style/v2/airship.css">
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-icons/v2/icons.css">
+
+    <!-- Airship Components -->
+    <script src="https://libs.cartocdn.com/airship-components/v2/airship.js"></script>
+
+    <!-- Airship Bridge -->
+    <script src="https://libs.cartocdn.com/airship-bridge/v2/asbridge.min.js"></script>
+</head>
+
+<body class="as-app-body">
+  <div class="as-app">
+    <header class="as-toolbar">
+      <button class="as-toolbar__item as-toolbar__toggle">
+        <i class="as-icon as-icon-hamburger as-title as-m--0"></i>
+      </button>
+      <div class="as-toolbar__item">
+        <img src="https://carto.com/developers/airship/reference/imported_content/examples/layouts/common/logo-circle.svg">
+      </div>
+      <nav class="as-toolbar__actions">
+        <ul>
+          <li>
+            <div class="as-toolbar__item">
+              <a href="https://www.carto.com">Link</a>
+            </div>
+          </li>
+          <li>
+            <div class="as-toolbar__item">
+              <a href="https://www.carto.com">Link 2</a>
+            </div>
+          </li>
+          <li>
+            <div class="as-toolbar__item">
+              <a href="https://www.carto.com">Link 3</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="as-content">
+      <main class="as-main">
+          <div class="as-map-area">
+              <div id="map"></div>
+              <footer class="as-map-footer">
+                <div class="as-box">
+                  <p class="as-title">Box</p>
+                  <p class="as-body">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  </p>
+                  <p class="as-body">
+                    Inventore possimus nam quam necessitatibus omnis, est sequi rem quibusdam molestiae.
+                  </p>
+                </div>
+              </footer>
+          </div>
+      </main>
+      <!-- <aside class="as-sidebar as-sidebar--right"> -->
+      <aside class="as-sidebar as-sidebar--left">
+        <div id="about" class="as-container as-container--border">
+          <section class="as-box">
+            <h1 class="as-title">About Inside Airbnb</h1>
+            <p class="as-body">
+                <a href="http://insideairbnb.com/">Inside Airbnb</a> is an independent, non-commercial set of tools and data that allows you to explore how Airbnb is really being used in cities around the world.
+                By analyzing publicly available information about a city's Airbnb's listings, Inside Airbnb provides filters and key metrics so you can see how Airbnb is being used to compete with the residential housing market.
+            </p>
+            <button id="clearAbout" class="as-btn as-btn--primary">Got it!</button>
+          </section>
+        </div>
+        <div class="as-container as-container--scrollable">
+          <section class="as-box">
+            <h1 class="as-title">Map settings</h1>
+            <h2 class="as-subheader">Basemap</h2>
+            <ul>
+              <li class="as-radio">
+                <input class="as-radio__input" type="radio" name="basemap" id="dmatter" value="darkmatter" checked />
+                <label class="as-caption" for="dmatter">Dark matter</label>
+              </li>
+              <li class="as-radio">
+                <input class="as-radio__input" type="radio" name="basemap" id="voyager" value="voyager" />
+                <label class="as-caption" for="voyager">Voyager</label>
+              </li>
+              <li class="as-radio">
+                <input class="as-radio__input" type="radio" name="basemap" id="positron" value="positron" />
+                <label class="as-caption" for="positron">Positron</label>
+              </li>
+            </ul>
+            <h2 class="as-subheader">Viewport settings</h2>
+            <p>
+              <span class="as-caption">Pitch</span>
+              <input type="number" min="0" max="60" value="0" id="pitch" class="as-input" type="text">
+            </p>
+            <p>
+              <span class="as-caption">Bearing</span>
+              <input type="number" min="0" max="360" value="0" id="bearing" class="as-input" type="text">
+            </p>
+          </section>
+          <section class="as-box">
+            <h1 class="as-title">Listings information</h1>
+            <h2 id="count" class="as-subheader"></h2>
+            <h4 class="as-subheader">Average price: <span id="priceAvg" class="as-subheader"></span></h4>
+          </section>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <script src="../scripts/map.js"></script>
+  <script>
+    const { map, layer } = createMap();
+
+    const toolbarActions = document.querySelector('.as-toolbar__actions');
+    document.querySelector('.as-toolbar__toggle').addEventListener('click', () => {
+      toolbarActions.classList.toggle('as-toolbar__actions--visible');
+    });
+
+    const about = document.querySelector('#about');
+    document.querySelector('#clearAbout').addEventListener('click', () => {
+      about.remove();
+    });
+
+    const count = document.querySelector('#count');
+    const priceAvg = document.querySelector('#priceAvg');
+    const pitch = document.querySelector('#pitch');
+    const bearing = document.querySelector('#bearing');
+
+    function updateUI(viz) {
+      const avgPrice = viz.variables.avgPrice.value;
+
+      count.innerText = `${viz.variables.featureCount.value} listings`;
+      priceAvg.innerText = `${isNaN(avgPrice) ? '--' : avgPrice.toFixed(2)} €`;
+    }
+
+    function bindUI(viz) {
+      document.querySelectorAll('input[name="basemap"]').forEach((input) => {
+        input.addEventListener('click', () => {
+          map.setStyle(carto.basemaps[input.value]);
+        });
+      });
+
+      pitch.addEventListener('input', () => {
+        const pitchValue = parseInt(pitch.value, 10);
+
+        if (!isNaN(pitchValue)) {
+          map.setPitch(pitchValue);
+        }
+      });
+
+      bearing.addEventListener('input', () => {
+        const bearingValue = parseInt(bearing.value, 10);
+
+        if (!isNaN(bearingValue)) {
+          map.setBearing(bearingValue);
+        }
+      });
+
+      layer.on('updated', () => {
+        updateUI(viz);
+      });
+    }
+
+    // Layer might be loaded or not
+    if (layer.viz) {
+      bindUI(layer.viz);
+    } else {
+      layer.on('loaded', () => {
+        bindUI(layer.viz);
+      });
+    }
+
+  </script>
+</body>
+
+</html>
