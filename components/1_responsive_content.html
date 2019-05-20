@@ -73,7 +73,6 @@
               </footer>
           </div>
       </main>
-      <!-- <aside class="as-sidebar as-sidebar--right"> -->
       <aside class="as-sidebar as-sidebar--left">
         <div id="about" class="as-container as-container--border">
           <section class="as-box">
@@ -127,10 +126,10 @@
   <script>
     const responsive = document.querySelector('as-responsive-content');
 
-    // Old (documented) way
+    // Old, Airship (documented) way
     // responsive.addEventListener('ready', () => { /* logic goes here */  });
 
-    // Generic stencil way
+    // Generic stencil way (undocumented)
     responsive.componentOnReady().then(() => {
       const { map, layer } = createMap();
 

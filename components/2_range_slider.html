@@ -131,7 +131,12 @@
 
     // Generic stencil way
     responsive.componentOnReady().then(() => {
-      const { map, layer } = createMap();
+      const { map, layer } = createMap({
+        viz: `
+          @minPrice: globalMin($price)
+          @maxPrice: globalMax($price)
+        `
+      });
 
       const toolbarActions = document.querySelector('.as-toolbar__actions');
       document.querySelector('.as-toolbar__toggle').addEventListener('click', () => {

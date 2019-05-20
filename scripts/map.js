@@ -1,4 +1,6 @@
-function createMap(q) {
+function createMap(opts = {}) {
+  const { viz, q } = opts;
+
   const map = new mapboxgl.Map({
     container: 'map',
     style: carto.basemaps.darkmatter,
@@ -14,12 +16,10 @@ function createMap(q) {
   const source = new carto.source.SQL(q || 'select * from madrid_listings');
   
   const layerviz = new carto.Viz(`
-    @hoodHist: globalHistogram($neighbourhood_group)
     @featureCount: viewportCount()
     @avgPrice: viewportAvg($price)
-    @minPrice: globalMin($price)
-    @maxPrice: globalMax($price)
-  `);
+    strokeWidth: 0
+  ` + (viz || ''));
   
   const layer = new carto.Layer('layer', source, layerviz);
   
@@ -29,4 +29,8 @@ function createMap(q) {
     map,
     layer
   };
+}
+
+function rgbaToCss(rgba) {
+  return `rgb(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
 }
