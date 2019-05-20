@@ -56,7 +56,6 @@
       </nav>
     </header>
     <as-responsive-content id="responsive">
-    <!-- <div class="as-content"> -->
       <main class="as-main">
           <div class="as-map-area">
               <div id="map"></div>
@@ -73,18 +72,7 @@
               </footer>
           </div>
       </main>
-      <!-- <aside class="as-sidebar as-sidebar--right"> -->
       <aside class="as-sidebar as-sidebar--left">
-        <div id="about" class="as-container as-container--border">
-          <section class="as-box">
-            <h1 class="as-title">About Inside Airbnb</h1>
-            <p class="as-body">
-                <a href="http://insideairbnb.com/">Inside Airbnb</a> is an independent, non-commercial set of tools and data that allows you to explore how Airbnb is really being used in cities around the world.
-                By analyzing publicly available information about a city's Airbnb's listings, Inside Airbnb provides filters and key metrics so you can see how Airbnb is being used to compete with the residential housing market.
-            </p>
-            <button id="clearAbout" class="as-btn as-btn--primary">Got it!</button>
-          </section>
-        </div>
         <div class="as-container as-container--scrollable">
           <section class="as-box">
             <h1 class="as-title">Map settings</h1>
@@ -122,7 +110,6 @@
           </section>
         </div>
       </aside>
-    <!-- </div> as-content -->
     </as-responsive-content>
   </div>
   <script src="../scripts/map.js"></script>
@@ -141,11 +128,6 @@
       const toolbarActions = document.querySelector('.as-toolbar__actions');
       document.querySelector('.as-toolbar__toggle').addEventListener('click', () => {
         toolbarActions.classList.toggle('as-toolbar__actions--visible');
-      });
-
-      const about = document.querySelector('#about');
-      document.querySelector('#clearAbout').addEventListener('click', () => {
-        about.remove();
       });
 
       const count = document.querySelector('#count');
