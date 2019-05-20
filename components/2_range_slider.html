@@ -3,7 +3,6 @@
 <html lang="en">
 
 <head>
-    <base href="/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -39,17 +38,17 @@
         <ul>
           <li>
             <div class="as-toolbar__item">
-              <a href="https://www.carto.com">Link</a>
+              <a href="/components/1_responsive_content.html">Previous</a>
             </div>
           </li>
           <li>
             <div class="as-toolbar__item">
-              <a href="https://www.carto.com">Link 2</a>
+              <a href="https://www.carto.com">Homepage</a>
             </div>
           </li>
           <li>
             <div class="as-toolbar__item">
-              <a href="https://www.carto.com">Link 3</a>
+              <a href="/components/3_category_widget.html">Next</a>
             </div>
           </li>
         </ul>
@@ -112,13 +111,14 @@
       </aside>
     </as-responsive-content>
   </div>
-  <script src="../scripts/map.js"></script>
+  <script src="/scripts/map.js"></script>
   <script>
     const responsive = document.querySelector('as-responsive-content');
 
     // Generic stencil way
     responsive.componentOnReady().then(() => {
       const { map, layer } = createMap({
+        q: 'SELECT * from madrid_listings where price < 100',
         viz: `
           @minPrice: globalMin($price)
           @maxPrice: globalMax($price)
