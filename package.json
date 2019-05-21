@@ -1,0 +1,23 @@
+{
+  "name": "airship-workshop",
+  "version": "1.0.0",
+  "description": "Airship workshop, step by step",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CartoDB/airship-workshop.git"
+  },
+  "author": "Román Jiménez <roman@carto.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CartoDB/airship-workshop/issues"
+  },
+  "homepage": "https://github.com/CartoDB/airship-workshop#readme",
+  "devDependencies": {
+    "serve": "^11.0.0"
+  }
+}
