@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://libs.cartocdn.com/airship-icons/v2/icons.css">
 
     <!-- Airship Components -->
-    <script src="https://libs.cartocdn.com/airship-components/cartoframes/airship.js"></script>
+    <script src="https://libs.cartocdn.com/airship-components/v2/airship.js"></script>
 
     <!-- Airship Bridge -->
     <script src="https://libs.cartocdn.com/airship-bridge/v2/asbridge.min.js"></script>
@@ -74,33 +74,6 @@
       <aside class="as-sidebar as-sidebar--left">
         <div class="as-container as-container--scrollable">
           <section class="as-box">
-            <h1 class="as-title">Map settings</h1>
-            <h2 class="as-subheader">Basemap</h2>
-            <ul>
-              <li class="as-radio">
-                <input class="as-radio__input" type="radio" name="basemap" id="dmatter" value="darkmatter" checked />
-                <label class="as-caption" for="dmatter">Dark matter</label>
-              </li>
-              <li class="as-radio">
-                <input class="as-radio__input" type="radio" name="basemap" id="voyager" value="voyager" />
-                <label class="as-caption" for="voyager">Voyager</label>
-              </li>
-              <li class="as-radio">
-                <input class="as-radio__input" type="radio" name="basemap" id="positron" value="positron" />
-                <label class="as-caption" for="positron">Positron</label>
-              </li>
-            </ul>
-            <h2 class="as-subheader">Viewport settings</h2>
-            <p>
-              <span class="as-caption">Pitch</span>
-              <as-range-slider id="pitch" step="1" min-value="0" max-value="60" value="0"></as-range-slider>
-            </p>
-            <p>
-              <span class="as-caption">Bearing</span>
-              <as-range-slider id="bearing" step="1" min-value="0" max-value="360" value="0"></as-range-slider>
-            </p>
-          </section>
-          <section class="as-box">
             <h1 class="as-title">Listings information</h1>
             <h2 id="count" class="as-subheader"></h2>
             <h4 class="as-subheader">Average price: <span id="priceAvg" class="as-subheader"></span></h4>
@@ -133,8 +106,6 @@
 
       const count = document.querySelector('#count');
       const priceAvg = document.querySelector('#priceAvg');
-      const pitch = document.querySelector('#pitch');
-      const bearing = document.querySelector('#bearing');
       const hood = document.querySelector('#hood');
       const priceHist= document.querySelector('#priceHist');
       const hoodHist = document.querySelector('#hoodHist');
@@ -153,20 +124,6 @@
       }
 
       function bindUI(viz) {
-        document.querySelectorAll('input[name="basemap"]').forEach((input) => {
-          input.addEventListener('click', () => {
-            map.setStyle(carto.basemaps[input.value]);
-          });
-        });
-
-        pitch.addEventListener('change', (e) => {
-          map.setPitch(e.detail);
-        });
-
-        bearing.addEventListener('change', (e) => {
-          map.setBearing(e.detail);
-        });
-
         hood.addEventListener('categoriesSelected', (event) => {
           if (event.detail.length === 0) {
             viz.filter.blendTo(1);
@@ -192,11 +149,11 @@
         // priceHist.range = [0, 6000];
 
         // Uncomment for background data support
-        priceHist.backgroundData = viz.variables.priceGlobalHist.value.map((val) => ({
-          start: val.x[0],
-          end: val.x[1],
-          value: val.y
-        }));
+        // priceHist.backgroundData = viz.variables.priceGlobalHist.value.map((val) => ({
+        //   start: val.x[0],
+        //   end: val.x[1],
+        //   value: val.y
+        // }));
 
         priceHist.tooltipFormatter = (value) => `${value.value} listings`;
 
