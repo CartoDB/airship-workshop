@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>VL Bridge</title>
+
+    <!-- Include CARTO VL & Mapbox GL -->
+    <script src="https://libs.cartocdn.com/carto-vl/v1.2/carto-vl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js"></script>
+
+    <!-- Airship CSS -->
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-style/v2/airship.css">
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-icons/v2/icons.css">
+
+    <!-- Airship Components -->
+    <script src="https://libs.cartocdn.com/airship-components/v2/airship.js"></script>
+
+    <!-- Airship Bridge -->
+    <script src="https://libs.cartocdn.com/airship-bridge/v2/asbridge.min.js"></script>
+</head>
+
+<body class="as-app-body">
+  <div class="as-app">
+    <header class="as-toolbar">
+      <button class="as-toolbar__item as-toolbar__toggle">
+        <i class="as-icon as-icon-hamburger as-title as-m--0"></i>
+      </button>
+      <div class="as-toolbar__item">
+        <img src="https://carto.com/developers/airship/reference/imported_content/examples/layouts/common/logo-circle.svg">
+      </div>
+      <nav class="as-toolbar__actions">
+        <ul>
+          <li>
+            <div class="as-toolbar__item">
+              <a href="/theming/index.html"><i class="as-icon as-icon-chevron-left"></i></a>
+            </div>
+          </li>
+          <li>
+            <div class="as-toolbar__item">
+              <a href="/bridge/2_animation.html"><i class="as-icon as-icon-chevron-right"></i></a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <as-responsive-content id="responsive">
+      <main class="as-main">
+          <div class="as-map-area">
+              <div id="map"></div>
+              <footer class="as-map-footer">
+                <div class="as-box">
+                  <as-histogram-widget
+                    disable-interactivity
+                    heading="Price"
+                    id="priceHist">
+                  </as-histogram-widget>
+                </div>
+                <div class="as-box">
+                    <as-histogram-widget
+                      show-clear
+                      heading="Neighborhood"
+                      id="hoodHist">
+                    </as-histogram-widget>
+                  </div>
+              </footer>
+          </div>
+      </main>
+      <aside class="as-sidebar as-sidebar--left">
+        <div class="as-container as-container--scrollable">
+          <section class="as-box">
+            <h1 class="as-title">Listings information</h1>
+            <as-range-slider id="longitude">
+            </as-range-slider>
+            <as-range-slider id="latitude">
+              </as-range-slider>
+            <as-category-widget
+              heading="Neighborhood"
+              show-clear-button id="hood"></as-category-widget>
+            <!-- Uncomment with the bridge code below for multi selection -->
+            <!-- <button class="as-btn as-btn--primary" id="applyCat">Apply</button> -->
+          </section>
+        </div>
+      </aside>
+    </as-responsive-content>
+  </div>
+  <script src="/scripts/map.js"></script>
+  <script>
+    const responsive = document.querySelector('as-responsive-content');
+
+    // Generic stencil way
+    responsive.componentOnReady().then(() => {
+      const { map, layer } = createMap({
+        q: 'select * from madrid_listings where price < 240',
+        viz: `
+          color: ramp($neighbourhood_group, BOLD)
+        `
+      });
+
+      const toolbarActions = document.querySelector('.as-toolbar__actions');
+      document.querySelector('.as-toolbar__toggle').addEventListener('click', () => {
+        toolbarActions.classList.toggle('as-toolbar__actions--visible');
+      });
+
+      const longitude = document.querySelector('#longitude');
+      const latitude = document.querySelector('#latitude');
+
+      // If we don't set the correct step, the widget might behave erratically
+      longitude.formatValue = latitude.formatValue = (value) => `${value.toFixed(4)}`;
+      longitude.step = latitude.step = 0.001;
+
+      function bindUI(viz) {
+        const bridge = new AsBridge.VLBridge({
+          carto: carto,
+          map: map,
+          layer: layer,
+          source: layer._source
+        });
+
+        bridge.histogram('#hoodHist', 'neighbourhood_group', {
+          readOnly: false,
+          totals: true
+        }).enableColorMapping();
+
+        bridge.histogram('#priceHist', 'price', {
+          readOnly: false,
+          // This should not be necessary, we automatically get them when specifying totals, but there's a known issue
+          buckets: [[0, 30], [30, 60], [60, 90], [90, 120], [120, 150], [150, 180], [180, 210], [210, 240]],
+          totals: true
+        });
+
+        bridge.category('#hood', 'neighbourhood_group', {
+          readOnly: false,
+          // Uncomment the element itself to get multi-selection
+          // button: '#applyCat'
+        }).enableColorMapping();
+
+        bridge.globalRange(longitude, 'longitude');
+        bridge.globalRange(latitude, 'latitude');
+
+        bridge.build();
+      }
+
+      // Layer might be loaded or not
+      if (layer.viz) {
+        bindUI(layer.viz);
+      } else {
+        layer.on('loaded', () => {
+          bindUI(layer.viz);
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Histogram Widget</title>
+
+    <!-- Include CARTO VL & Mapbox GL -->
+    <script src="https://libs.cartocdn.com/carto-vl/v1.2/carto-vl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js"></script>
+
+    <!-- Airship CSS -->
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-style/v2/airship.css">
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-icons/v2/icons.css">
+
+    <!-- Airship Components -->
+    <script src="https://libs.cartocdn.com/airship-components/v2/airship.js"></script>
+
+    <!-- Airship Bridge -->
+    <script src="https://libs.cartocdn.com/airship-bridge/v2/asbridge.min.js"></script>
+</head>
+
+<body class="as-app-body">
+  <div class="as-app">
+    <header class="as-toolbar">
+      <button class="as-toolbar__item as-toolbar__toggle">
+        <i class="as-icon as-icon-hamburger as-title as-m--0"></i>
+      </button>
+      <div class="as-toolbar__item">
+        <img src="https://carto.com/developers/airship/reference/imported_content/examples/layouts/common/logo-circle.svg">
+      </div>
+      <nav class="as-toolbar__actions">
+        <ul>
+          <li>
+            <div class="as-toolbar__item">
+              <a href="/bridge/index.html"><i class="as-icon as-icon-chevron-left"></i></a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <as-responsive-content id="responsive">
+      <main class="as-main">
+          <div class="as-map-area">
+              <div id="map"></div>
+              <footer class="as-map-footer">
+                <div class="as-box">
+                  <as-time-series-widget
+                    animated
+                    heading="Cordoba buildings"
+                    time-format="%Q"
+                    id="timeSeries">
+                  </as-time-series-widget>
+                </div>
+              </footer>
+          </div>
+      </main>
+    </as-responsive-content>
+  </div>
+  <script>
+    document.querySelector('as-responsive-content').componentOnReady().then(() => {
+      const map = new mapboxgl.Map({
+        container: 'map',
+        style: carto.basemaps.darkmatter,
+        center: [-4.77, 37.88],
+        zoom: 12
+      });
+      
+      carto.setDefaultAuth({
+        username: 'roman-carto',
+        apiKey: 'default_public'
+      });
+      
+      // Putting the WHERE clause because some outliers make things look ugly
+      const source = new carto.source.SQL(
+        'select * from cordoba_catastro_simple where year > 1900 and year < 2018'
+      );
+      
+      const layerviz = new carto.Viz(`
+        strokeWidth: 0
+      `);
+      
+      const layer = new carto.Layer('layer', source, layerviz);
+      
+      layer.addTo(map);
+
+      const bridge = new AsBridge.VLBridge({
+        carto: carto,
+        map: map,
+        layer: layer,
+        source: source
+      });
+
+      bridge.timeSeries('#timeSeries', 'year', {
+        buckets: 30,
+        readOnly: false,
+        totals: true,
+        duration: 5,
+        fade: [0.1, Number.MAX_SAFE_INTEGER]
+      });
+
+      bridge.build();
+    });
+  </script>
+</body>
+
+</html>
