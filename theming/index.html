@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>Histogram Widget</title>
+    <title>Theming</title>
 
     <!-- Include CARTO VL & Mapbox GL -->
     <script src="https://libs.cartocdn.com/carto-vl/v1.2/carto-vl.js"></script>
@@ -17,6 +17,7 @@
     <!-- Airship CSS -->
     <link rel="stylesheet" href="https://libs.cartocdn.com/airship-style/v2/airship.css">
     <link rel="stylesheet" href="https://libs.cartocdn.com/airship-icons/v2/icons.css">
+    <link id="theme" rel="stylesheet" href="/theming/default.css">
 
     <!-- Airship Components -->
     <script src="https://libs.cartocdn.com/airship-components/v2/airship.js"></script>
@@ -43,7 +44,7 @@
           </li>
           <li>
             <div class="as-toolbar__item">
-              <a href="/theming/index.html"><i class="as-icon as-icon-chevron-right"></i></a>
+              <a href="."><i class="as-icon as-icon-chevron-right"></i></a>
             </div>
           </li>
         </ul>
@@ -74,6 +75,8 @@
       <aside class="as-sidebar as-sidebar--left">
         <div class="as-container as-container--scrollable">
           <section class="as-box">
+            <h4 class="as-subheader">Airship theme</h4>
+            <as-dropdown id="themePicker"></as-dropdown>
             <h1 class="as-title">Listings information</h1>
             <h2 id="count" class="as-subheader"></h2>
             <h4 class="as-subheader">Average price: <span id="priceAvg" class="as-subheader"></span></h4>
@@ -87,6 +90,12 @@
   <script src="/scripts/map.js"></script>
   <script>
     const responsive = document.querySelector('as-responsive-content');
+
+    function applyTheme(theme) {
+      const el = document.querySelector('link#theme');
+
+      el.href = `/theming/${theme || 'default'}.css`;
+    }
 
     // Generic stencil way
     responsive.componentOnReady().then(() => {
@@ -109,6 +118,15 @@
       const hood = document.querySelector('#hood');
       const priceHist= document.querySelector('#priceHist');
       const hoodHist = document.querySelector('#hoodHist');
+      const picker = document.querySelector('#themePicker');
+
+      picker.options = [
+        { text: 'Default', value: 'default' },
+        { text: 'Dark', value: 'dark' },
+        { text: 'Light', value: 'light' }
+      ];
+
+      picker.selectedOption = 'default';
 
       function updateUI(viz) {
         const avgPrice = viz.variables.avgPrice.value;
@@ -143,17 +161,16 @@
           viz.filter.blendTo(`$neighbourhood_group in [${event.detail.selection.map(e => `'${e}'`).join('')}]`);
         });
 
-        /* Histogram features */
-
-        // Uncomment for custom range
-        // priceHist.range = [0, 6000];
+        picker.addEventListener('optionChanged', (e) => {
+          applyTheme(e.detail);
+        });
 
         // Uncomment for background data support
-        // priceHist.backgroundData = viz.variables.priceGlobalHist.value.map((val) => ({
-        //   start: val.x[0],
-        //   end: val.x[1],
-        //   value: val.y
-        // }));
+        priceHist.backgroundData = viz.variables.priceGlobalHist.value.map((val) => ({
+          start: val.x[0],
+          end: val.x[1],
+          value: val.y
+        }));
 
         priceHist.tooltipFormatter = (value) => `${value.value} listings`;
 
